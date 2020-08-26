@@ -10,7 +10,6 @@ import lombok.ToString;
 @Data
 @ToString
 public class Job {
-
     // Job唯一Id
     private String id;
 
