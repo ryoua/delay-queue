@@ -4,7 +4,10 @@ import com.dq.model.Job;
 import com.dq.utils.RedisUtil;
 import com.google.gson.Gson;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.ZSetOperations;
 import org.springframework.stereotype.Component;
+
+import java.util.Set;
 
 /**
  * * @Author: RyouA
@@ -13,16 +16,22 @@ import org.springframework.stereotype.Component;
 @Component
 public class DelayBucket {
     @Autowired
-    Gson gson;
+    private Gson gson;
 
     @Autowired
-    RedisUtil redisUtil;
+    private RedisUtil redisUtil;
+
+    private static final String DELAY_QUEUE = "dq:";
 
     public void addBucket(Job job) {
-
+        long absTime = System.currentTimeMillis() + job.getDelay() * 1000;
+        job.setAbsTime(absTime);
+        redisUtil.zAdd(DELAY_QUEUE + job.getTopic(), job.getId(), absTime);
     }
 
-    public Job getBucket(String bucketId) {
-        return null;
+    public Job[] getBucket(String topic) {
+        long now = System.currentTimeMillis();
+        Set<String> jobs = redisUtil.zRange(DELAY_QUEUE + topic, now - 5000, now);
+        return (Job[]) jobs.toArray();
     }
 }

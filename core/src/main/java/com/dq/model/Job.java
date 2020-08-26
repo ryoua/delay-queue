@@ -19,6 +19,9 @@ public class Job {
     // 延迟时间
     private Long delay;
 
+    // 绝对时间
+    private Long absTime;
+
     // 执行超时时间
     private Long ttr;
 
