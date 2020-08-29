@@ -9,7 +9,7 @@ import lombok.ToString;
  **/
 @Data
 @ToString
-public class Bucket {
+public class JobBucket {
     private String jobId;
     private double absTime;
 }

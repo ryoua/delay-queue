@@ -1,6 +1,6 @@
 package com.dq.core;
 
-import com.dq.model.Bucket;
+import com.dq.model.JobBucket;
 import com.dq.model.Job;
 import com.dq.utils.RedisUtil;
 import com.google.gson.Gson;
@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.ZSetOperations;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -24,23 +25,26 @@ public class DelayBucket {
     @Autowired
     private RedisUtil redisUtil;
 
-    private static final String DELAY_QUEUE = "dq:";
+    private static final String DELAY_QUEUE_BUCKET = "dq:bucket:";
+
 
     public void addBucket(Job job) {
+        // 计算绝对时间
         long absTime = System.currentTimeMillis() + job.getDelay() * 1000;
         job.setAbsTime(absTime);
-        redisUtil.zAdd(DELAY_QUEUE + job.getTopic(), job.getId(), absTime);
+        redisUtil.zAdd(DELAY_QUEUE_BUCKET + job.getTopic(), job.getId(), absTime);
     }
 
-    public List<Bucket> getBucket(String topic) {
+    public List<JobBucket> getBucket(String topic) {
         long now = System.currentTimeMillis();
-        Set<ZSetOperations.TypedTuple<String>> typedTuples = redisUtil.zRangeWithScores(DELAY_QUEUE + topic, now - 5000, now);
-        List<Bucket> result = new ArrayList<>();
+        Set<ZSetOperations.TypedTuple<String>> typedTuples =
+                redisUtil.zRangeWithScores(DELAY_QUEUE_BUCKET + topic, now - 5000, now);
+        List<JobBucket> result = new ArrayList<>();
         for (ZSetOperations.TypedTuple typedTuple : typedTuples) {
-            Bucket bucket = new Bucket();
-            bucket.setAbsTime(typedTuple.getScore());
-            bucket.setJobId((String) typedTuple.getValue());
-            result.add(bucket);
+            JobBucket jobBucket = new JobBucket();
+            jobBucket.setAbsTime(typedTuple.getScore());
+            jobBucket.setJobId((String) typedTuple.getValue());
+            result.add(jobBucket);
         }
         return result;
     }

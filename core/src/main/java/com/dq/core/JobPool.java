@@ -1,7 +1,9 @@
 package com.dq.core;
 
 import com.dq.model.Job;
+import com.dq.model.JobStatus;
 import com.dq.utils.RedisUtil;
+import com.dq.utils.SnowFlake;
 import com.google.gson.Gson;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -18,7 +20,11 @@ public class JobPool {
     @Autowired
     RedisUtil redisUtil;
 
+    @Autowired
+    SnowFlake snowFlake;
+
     public void addJob(Job job) {
+        job.setId(job.getTopic() + "No." + snowFlake.nextId());
         redisUtil.set(job.getId(), gson.toJson(job));
     }
 

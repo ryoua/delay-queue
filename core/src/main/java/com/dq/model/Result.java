@@ -6,15 +6,14 @@ package com.dq.model;
  **/
 public class Result<T> {
 
-    //操作代码
+    // 操作代码
     int code;
 
-    //提示信息
+    // 提示信息
     String message;
 
-    //结果数据
+    // 结果数据
     T data;
-
 
     public Result(int code, String message) {
         this.code = code;

@@ -1,6 +1,6 @@
 package com.dq.core;
 
-import com.dq.model.Bucket;
+import com.dq.model.JobBucket;
 import com.dq.model.Job;
 import com.dq.model.JobStatus;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,16 +16,15 @@ import java.util.List;
 public class Timer {
     @Autowired
     private DelayBucket bucket;
-
     @Autowired
     JobPool jobPool;
 
     public void polling() {
-        List<Bucket> list = this.bucket.getBucket("");
-        for (Bucket bucket : list) {
+        List<JobBucket> list = this.bucket.getBucket("");
+        for (JobBucket jobBucket : list) {
             long now = System.currentTimeMillis();
-            if (bucket.getAbsTime() >= now) {
-                Job job = jobPool.getJob(bucket.getJobId());
+            if (jobBucket.getAbsTime() >= now) {
+                Job job = jobPool.getJob(jobBucket.getJobId());
                 if (job.getStatus().equals(JobStatus.DELETED)) {
                     continue;
                 } else {

@@ -28,9 +28,6 @@ public class Job {
     // 消息体, JSON格式
     private String body;
 
-    // 执行动作
-    private String command;
-
     // 状态
     private JobStatus status;
 }

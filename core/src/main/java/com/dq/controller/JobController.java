@@ -14,17 +14,19 @@ import org.springframework.web.bind.annotation.*;
  **/
 @RestController
 @Slf4j
-@RequestMapping("/dq")
-public class DelayQueueController {
+@RequestMapping("/dq/job")
+public class JobController {
     @Autowired
     private JobPool jobPool;
 
     @Autowired
     private DelayBucket delayBucket;
 
-    @PostMapping("/job")
+    @PostMapping("")
     public Result addJob(@RequestBody Job job) {
+        // 存入JobPool
         jobPool.addJob(job);
+        // 计算绝对时间, 存入bucket
         delayBucket.addBucket(job);
         return Result.SUCCESS();
     }
