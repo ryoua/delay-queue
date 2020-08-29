@@ -19,6 +19,7 @@ public class Timer {
     @Autowired
     JobPool jobPool;
 
+    // TODO: notify / wait实现?
     public void polling() {
         List<JobBucket> list = this.bucket.getBucket("");
         for (JobBucket jobBucket : list) {

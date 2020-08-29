@@ -24,6 +24,7 @@ public class JobPool {
     SnowFlake snowFlake;
 
     public void addJob(Job job) {
+        // TODO: 验证是否加入成功, 做持久化?
         job.setId(job.getTopic() + "No." + snowFlake.nextId());
         redisUtil.set(job.getId(), gson.toJson(job));
     }

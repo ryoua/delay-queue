@@ -18,7 +18,6 @@ import org.springframework.web.bind.annotation.*;
 public class JobController {
     @Autowired
     private JobPool jobPool;
-
     @Autowired
     private DelayBucket delayBucket;
 

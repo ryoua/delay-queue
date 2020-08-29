@@ -32,6 +32,7 @@ public class DelayBucket {
         // 计算绝对时间
         long absTime = System.currentTimeMillis() + job.getDelay() * 1000;
         job.setAbsTime(absTime);
+        // TODO 持久化?
         redisUtil.zAdd(DELAY_QUEUE_BUCKET + job.getTopic(), job.getId(), absTime);
     }
 
