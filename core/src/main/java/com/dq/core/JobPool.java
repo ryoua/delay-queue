@@ -17,16 +17,13 @@ import org.springframework.stereotype.Component;
 @Component
 public class JobPool {
     @Autowired
-    Gson gson;
-
+    private Gson gson;
     @Autowired
-    RedisUtil redisUtil;
-
+    private RedisUtil redisUtil;
     @Autowired
-    SnowFlake snowFlake;
+    private SnowFlake snowFlake;
 
     public void addJob(Job job) {
-        // TODO: 验证是否加入成功, 做持久化?
         job.setId(job.getTopic() + "No." + snowFlake.nextId());
         redisUtil.set(job.getId(), gson.toJson(job));
     }
@@ -38,6 +35,10 @@ public class JobPool {
     public Job getJob(String id) {
         String job = redisUtil.get(id);
         return gson.fromJson(job, Job.class);
+    }
+
+    public String getJobStr(String id) {
+        return redisUtil.get(id);
     }
 
     public void deleteTopic(String topic) {

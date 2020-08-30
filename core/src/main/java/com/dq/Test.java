@@ -1,36 +1,29 @@
+package com.dq;
 
-import com.dq.Application;
 import com.dq.controller.JobController;
-import com.dq.model.JobStatus;import com.dq.model.Job;
-import org.junit.Assert;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import com.dq.model.Job;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.stereotype.Component;
 
 import java.util.Random;
 import java.util.UUID;
 
 /**
  * * @Author: RyouA
- * * @Date: 2020/8/29
+ * * @Date: 2020/8/30
  **/
-@RunWith(SpringRunner.class)
-@SpringBootTest(classes = Application.class)
-public class JobControllerTest {
+@Component
+public class Test {
     @Autowired
     JobController jobController;
 
-    @Test
-    public void Test() throws Exception {
-        Random random = new Random();
+    public void test() throws Exception {
         Long start = System.currentTimeMillis();
         for (int i = 0; i < 10000; i++) {
             Job job = new Job();
             job.setId(UUID.randomUUID().toString());
             job.setTopic("test");
-            job.setDelay(random.nextLong());
+            job.setDelay(Long.parseLong(String.valueOf(Math.random() * 10).substring(0, 1)) + 5);
             job.setTtr(10L);
             job.setBody("test");
             jobController.addJob(job);
