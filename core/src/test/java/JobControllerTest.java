@@ -30,7 +30,7 @@ public class JobControllerTest {
             job.setTopic("test");
             job.setDelay(100L);
             job.setTtr(10L);
-            job.setBody("testestestes");
+            job.setBody("test");
             jobController.addJob(job);
         }
         Long end = System.currentTimeMillis();
