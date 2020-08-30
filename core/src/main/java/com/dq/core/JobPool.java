@@ -1,5 +1,7 @@
 package com.dq.core;
 
+import com.dq.lifecycle.LifecycleEvent;
+import com.dq.lifecycle.LifecycleListener;
 import com.dq.model.Job;
 import com.dq.model.JobStatus;
 import com.dq.utils.RedisUtil;
@@ -36,5 +38,11 @@ public class JobPool {
     public Job getJob(String id) {
         String job = redisUtil.get(id);
         return gson.fromJson(job, Job.class);
+    }
+
+    public void deleteTopic(String topic) {
+    }
+
+    public void getTopicJob(String topic) {
     }
 }

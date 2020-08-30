@@ -13,5 +13,7 @@ spring:
         max-wait: 1
         max-idle: 8
         min-idle: 0
+logging:
+  file: /var/log/dq/dq_log.log
 
 

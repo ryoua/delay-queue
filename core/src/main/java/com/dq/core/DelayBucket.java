@@ -3,15 +3,18 @@ package com.dq.core;
 import com.dq.model.JobBucket;
 import com.dq.model.Job;
 import com.dq.utils.RedisUtil;
+import com.dq.utils.StringManager;
 import com.google.gson.Gson;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.ZSetOperations;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+
 
 /**
  * * @Author: RyouA
@@ -21,19 +24,27 @@ import java.util.Set;
 public class DelayBucket {
     @Autowired
     private Gson gson;
-
     @Autowired
     private RedisUtil redisUtil;
 
-    private static final String DELAY_QUEUE_BUCKET = "dq:bucket:";
+    // ---------------------- static properties ---------------------- //
 
+    protected static final String DELAY_QUEUE_BUCKET = "dq:bucket:";
 
-    public void addBucket(Job job) {
-        // 计算绝对时间
+    protected static final List<String> topics = new ArrayList<>();
+
+    protected static final Logger log = LoggerFactory.getLogger(DelayBucket.class);
+
+    protected static final StringManager sm = StringManager.getManager(DelayBucket.class);
+
+    // ---------------------- public methods ---------------------- //
+
+    public void addJobToBucket(Job job) {
         long absTime = System.currentTimeMillis() + job.getDelay() * 1000;
         job.setAbsTime(absTime);
-        // TODO 持久化?
+        topics.add(job.getTopic());
         redisUtil.zAdd(DELAY_QUEUE_BUCKET + job.getTopic(), job.getId(), absTime);
+        log.info(sm.getString("bucket.addJob"));
     }
 
     public List<JobBucket> getBucket(String topic) {

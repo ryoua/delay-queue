@@ -86,7 +86,7 @@
             <artifactId>okhttp</artifactId>
             <version>3.10.0</version>
         </dependency>
-    </dependencies>
+</dependencies>
 
     <build>
         <plugins>
