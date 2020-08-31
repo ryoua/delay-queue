@@ -6,29 +6,43 @@ import java.util.EventObject;
  * * @Author: RyouA
  * * @Date: 2020/8/30
  **/
-public final class LifecycleEvent extends EventObject {
+public final class LifecycleEvent
+        extends EventObject {
 
-    private static final long serialVersionUID = 1L;
+    // ----------------------------------------------------------- Constructors
+
+    public LifecycleEvent(Lifecycle lifecycle, String type) {
+        this(lifecycle, type, null);
+    }
 
     public LifecycleEvent(Lifecycle lifecycle, String type, Object data) {
         super(lifecycle);
+        this.lifecycle = lifecycle;
         this.type = type;
         this.data = data;
     }
 
-    private final Object data;
+    // ----------------------------------------------------- Instance Variables
 
-    private final String type;
+    private Object data = null;
+
+    private Lifecycle lifecycle = null;
+
+    private String type = null;
+
+    // ------------------------------------------------------------- Properties
 
     public Object getData() {
-        return data;
+        return (this.data);
     }
 
     public Lifecycle getLifecycle() {
-        return (Lifecycle) getSource();
+        return (this.lifecycle);
     }
 
     public String getType() {
-        return this.type;
+        return (this.type);
     }
+
 }
+

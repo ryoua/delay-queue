@@ -6,21 +6,58 @@ package com.dq.lifecycle;
  **/
 public final class LifecycleException extends Exception {
 
-    private static final long serialVersionUID = 1L;
+    //------------------------------------------------------------ Constructors
 
     public LifecycleException() {
-        super();
+        this(null, null);
     }
 
     public LifecycleException(String message) {
-        super(message);
+        this(message, null);
     }
 
     public LifecycleException(Throwable throwable) {
-        super(throwable);
+        this(null, throwable);
     }
 
     public LifecycleException(String message, Throwable throwable) {
-        super(message, throwable);
+        super();
+        this.message = message;
+        this.throwable = throwable;
     }
+
+
+    //------------------------------------------------------ Instance Variables
+
+    protected String message = null;
+
+    protected Throwable throwable = null;
+
+
+    //---------------------------------------------------------- Public Methods
+
+    @Override
+    public String getMessage() {
+        return (message);
+    }
+
+    public Throwable getThrowable() {
+        return (throwable);
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder("LifecycleException:  ");
+        if (message != null) {
+            sb.append(message);
+            if (throwable != null) {
+                sb.append(":  ");
+            }
+        }
+        if (throwable != null) {
+            sb.append(throwable.toString());
+        }
+        return (sb.toString());
+    }
+
 }

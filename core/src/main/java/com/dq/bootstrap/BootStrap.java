@@ -1,4 +1,4 @@
-package com.dq;
+package com.dq.bootstrap;
 
 import com.dq.core.timer.poll.Timer;
 import org.springframework.beans.factory.annotation.Autowired;

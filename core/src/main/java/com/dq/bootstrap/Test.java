@@ -1,4 +1,4 @@
-package com.dq;
+package com.dq.bootstrap;
 
 import com.dq.controller.JobController;
 import com.dq.model.Job;

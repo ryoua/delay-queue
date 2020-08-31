@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
  * * @Date: 2020/8/26
  **/
 @RestController
-    @RequestMapping("/dq")
+@RequestMapping("/dq")
 public class JobController {
     @Autowired
     private JobPool jobPool;
