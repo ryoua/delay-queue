@@ -8,7 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.Queue;
-import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ConcurrentLinkedDeque;
 
 /**
@@ -24,25 +23,21 @@ public class JobPool {
     @Autowired
     private SnowFlake snowFlake;
 
-    private final Queue<Job> retryAddQueue = new ConcurrentLinkedDeque<>();
-    private final Queue<String> retryDeleteQueue = new ConcurrentLinkedDeque<>();
-
     public void addJob(Job job) {
         job.setId(job.getTopic() + "No." + snowFlake.nextId());
         try {
             redisUtil.set(job.getId(), gson.toJson(job));
         } catch (Exception e) {
-            this.retryAddQueue.add(job);
             System.out.println("持久化准备重试");
         }
     }
 
-    public void deleteJob(String id) {
+    public boolean deleteJob(String id) {
         try {
             redisUtil.delete(id);
+            return true;
         } catch (Exception e) {
-            this.retryDeleteQueue.add(id);
-            System.out.println("持久化准备重试");
+            return false;
         }
     }
 
@@ -55,7 +50,7 @@ public class JobPool {
         return redisUtil.get(id);
     }
 
-    public void deleteTopic(String topic) {
+    public void deleteAllJobWithTopic(String topic) {
     }
 
     public void getTopicJob(String topic) {

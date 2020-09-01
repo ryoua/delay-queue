@@ -30,13 +30,17 @@ public class JobController {
 
     @DeleteMapping("/job/{id}")
     public Result deleteJob(@PathVariable("id") String id) {
-        jobPool.deleteJob(id);
-        return Result.SUCCESS();
+        boolean isSuccess = jobPool.deleteJob(id);
+        if (isSuccess) {
+            return new Result(200, "删除成功");
+        } else {
+            return new Result(500, "发生异常, 删除失败, 重试中!");
+        }
     }
 
     @DeleteMapping("/topic/job/{topic}")
     public Result deleteTopicJob(@PathVariable("topic") String topic) {
-        jobPool.deleteTopic(topic);
+        jobPool.deleteJob(topic);
         return Result.SUCCESS();
     }
 

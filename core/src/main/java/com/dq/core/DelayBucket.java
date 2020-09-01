@@ -28,8 +28,6 @@ public class DelayBucket {
     @Autowired
     private RedisUtil redisUtil;
 
-    // ---------------------- static properties ---------------------- //
-
     private static final String DELAY_QUEUE_BUCKET = "dq:bucket:";
 
     private static final List<String> topics = new ArrayList<>();
@@ -37,8 +35,6 @@ public class DelayBucket {
     private static final Logger log = LoggerFactory.getLogger(DelayBucket.class);
 
     private static final StringManager sm = StringManager.getManager(DelayBucket.class);
-
-    // ---------------------- public methods ---------------------- //
 
     public void addJobToBucket(Job job) {
         long absTime = System.currentTimeMillis() + job.getDelay() * 1000;

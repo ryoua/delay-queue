@@ -19,7 +19,7 @@ public class Test {
 
     public void test() throws Exception {
         Long start = System.currentTimeMillis();
-        for (int i = 0; i < 10000; i++) {
+        for (int i = 0; i < 100000; i++) {
             Job job = new Job();
             job.setId(UUID.randomUUID().toString());
             job.setTopic("test");

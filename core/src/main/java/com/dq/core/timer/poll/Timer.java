@@ -9,6 +9,7 @@ import com.dq.holder.ApplicationContextHolder;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -29,23 +30,30 @@ public class Timer extends BaseTimer {
         JobPool jobPool = (JobPool) ApplicationContextHolder.getBeanByType(JobPool.class);
         ReadyQueue readyQueue = (ReadyQueue) ApplicationContextHolder.getBeanByType(ReadyQueue.class);
 
-        AtomicInteger atomicInteger = new AtomicInteger();
+        Integer atomicInteger = 0;
 
-        while (true) {
+        boolean flag = true;
+        System.out.println(new Date());
+        while (flag) {
             long now = System.currentTimeMillis();
             List<BucketJob> jobList = bucket.getBucket("test");
             for (BucketJob job : jobList) {
                 if (job.getAbsTime() >= now) {
-                    System.out.println(job.getJobId() + "put into dq");
+//                    System.out.println(job.getJobId() + "put into dq");
                     if (readyQueue.addJobToReadyQueue(job)) {
-                        atomicInteger.incrementAndGet();
+                        atomicInteger++;
                     }
                     jobPool.deleteJob(job.getJobId());
                 }
             }
-            System.out.println(atomicInteger);
+            if (jobList.isEmpty()) {
+                flag = false;
+            }
+            if (atomicInteger == 100000) {
+                flag = false;
+                System.out.println(new Date());
+                break;
+            }
         }
-
-
     }
 }
