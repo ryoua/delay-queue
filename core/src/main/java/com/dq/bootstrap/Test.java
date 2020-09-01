@@ -19,11 +19,11 @@ public class Test {
 
     public void test() throws Exception {
         Long start = System.currentTimeMillis();
-        for (int i = 0; i < 100000; i++) {
+        for (int i = 0; i < 200000; i++) {
             Job job = new Job();
             job.setId(UUID.randomUUID().toString());
             job.setTopic("test");
-            job.setDelay(Long.parseLong(String.valueOf(Math.random() * 10).substring(0, 1)) + 5);
+            job.setDelay(0L);
             job.setTtr(10L);
             job.setBody("test");
             jobController.addJob(job);

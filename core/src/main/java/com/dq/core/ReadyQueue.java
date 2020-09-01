@@ -7,6 +7,9 @@ import com.google.gson.Gson;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * * @Author: RyouA
  * * @Date: 2020/8/30
@@ -28,6 +31,11 @@ public class ReadyQueue {
             return false;
         }
         redisUtil.lLeftPush(DELAY_QUEUE_READY_QUEUE, gson.toJson(job));
+        return true;
+    }
+
+    public boolean addJobsToReadyQueue(List<String> jobs) {
+        redisUtil.lLeftPushAll(DELAY_QUEUE_READY_QUEUE, jobs);
         return true;
     }
 }

@@ -7,8 +7,7 @@ import com.google.gson.Gson;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.Queue;
-import java.util.concurrent.ConcurrentLinkedDeque;
+import java.util.List;
 
 /**
  * * @Author: RyouA
@@ -25,25 +24,26 @@ public class JobPool {
 
     public void addJob(Job job) {
         job.setId(job.getTopic() + "No." + snowFlake.nextId());
-        try {
-            redisUtil.set(job.getId(), gson.toJson(job));
-        } catch (Exception e) {
-            System.out.println("持久化准备重试");
-        }
+        redisUtil.set(job.getId(), gson.toJson(job));
     }
 
     public boolean deleteJob(String id) {
-        try {
-            redisUtil.delete(id);
-            return true;
-        } catch (Exception e) {
-            return false;
-        }
+        redisUtil.delete(id);
+        return true;
+    }
+
+    public boolean deleteJobs(List<String> idList) {
+        redisUtil.delete(idList);
+        return true;
     }
 
     public Job getJob(String id) {
         String job = redisUtil.get(id);
         return gson.fromJson(job, Job.class);
+    }
+
+    public List<String> getJobs(List<String> idList) {
+        return redisUtil.multiGet(idList);
     }
 
     public String getJobStr(String id) {
@@ -55,6 +55,5 @@ public class JobPool {
 
     public void getTopicJob(String topic) {
     }
-
 
 }
