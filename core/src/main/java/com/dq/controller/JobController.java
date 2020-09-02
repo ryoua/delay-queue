@@ -8,6 +8,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 /**
  * * 暴露的接口
  * * @Author: RyouA
@@ -28,25 +30,16 @@ public class JobController {
         return Result.SUCCESS();
     }
 
-    @DeleteMapping("/job/{id}")
-    public Result deleteJob(@PathVariable("id") String id) {
-        boolean isSuccess = jobPool.deleteJob(id);
-        if (isSuccess) {
-            return new Result(200, "删除成功");
-        } else {
-            return new Result(500, "发生异常, 删除失败, 重试中!");
-        }
-    }
-
-    @DeleteMapping("/topic/job/{topic}")
-    public Result deleteTopicJob(@PathVariable("topic") String topic) {
-        jobPool.deleteJob(topic);
+    @PostMapping("/jobs")
+    public Result addJobs(@RequestBody List<Job> jobs) {
+        jobPool.addJobs(jobs);
+        delayBucket.addJobsToBucket(jobs);
         return Result.SUCCESS();
     }
 
-    @GetMapping("/topic/{topic}")
-    public Result getTopicJob(@PathVariable("topic") String topic) {
-        jobPool.getTopicJob(topic);
+    @DeleteMapping("/job/{id}")
+    public Result deleteJob(@PathVariable("id") String id) {
+        jobPool.deleteJob(id);
         return Result.SUCCESS();
     }
 }

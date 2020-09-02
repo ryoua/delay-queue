@@ -5,7 +5,8 @@ import com.dq.model.Job;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.Random;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -19,15 +20,17 @@ public class Test {
 
     public void test() throws Exception {
         Long start = System.currentTimeMillis();
-        for (int i = 0; i < 200000; i++) {
+        List<Job> list = new ArrayList<>();
+        for (int i = 0; i < 300000; i++) {
             Job job = new Job();
             job.setId(UUID.randomUUID().toString());
             job.setTopic("test");
-            job.setDelay(0L);
+            job.setDelay(5L);
             job.setTtr(10L);
             job.setBody("test");
-            jobController.addJob(job);
+            list.add(job);
         }
+        jobController.addJobs(list);
         Long end = System.currentTimeMillis();
         System.out.println(end - start);
     }

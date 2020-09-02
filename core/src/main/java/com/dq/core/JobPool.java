@@ -38,14 +38,12 @@ public class JobPool {
         redisUtil.multiSet(map);
     }
 
-    public boolean deleteJob(String id) {
+    public void deleteJob(String id) {
         redisUtil.delete(id);
-        return true;
     }
 
-    public boolean deleteJobs(List<String> idList) {
+    public void deleteJobs(List<String> idList) {
         redisUtil.delete(idList);
-        return true;
     }
 
     public String getJob(String id) {

@@ -50,12 +50,12 @@ public class DelayBucket {
             job.setAbsTime(absTime);
             if (map.containsKey(job.getTopic())) {
                 Set<ZSetOperations.TypedTuple<String>> typedTuples = map.get(job.getTopic());
-                ZSetOperations.TypedTuple<String> typedTuple = new DefaultTypedTuple<>(gson.toJson(job), (double) job.getAbsTime());
+                ZSetOperations.TypedTuple<String> typedTuple = new DefaultTypedTuple<>(job.getId(), (double) job.getAbsTime());
                 typedTuples.add(typedTuple);
                 map.put(job.getTopic(), typedTuples);
             } else {
                 Set<ZSetOperations.TypedTuple<String>> typedTuples = new HashSet<>();
-                ZSetOperations.TypedTuple<String> typedTuple = new DefaultTypedTuple<>(gson.toJson(job), (double) job.getAbsTime());
+                ZSetOperations.TypedTuple<String> typedTuple = new DefaultTypedTuple<>(job.getId(), (double) job.getAbsTime());
                 typedTuples.add(typedTuple);
                 map.put(job.getTopic(), typedTuples);
                 topicList.add(job.getTopic());

@@ -37,7 +37,7 @@ public class Timer extends BaseTimer {
         System.out.println(System.currentTimeMillis());
         while (flag) {
             long now = System.currentTimeMillis();
-            List<BucketJob> jobList = bucket.getBucket("test");
+            List<BucketJob> jobList = bucket.getBucketJobs("test");
             for (BucketJob job : jobList) {
                 if (job.getAbsTime() <= now) {
                     if (readyQueue.addJobToReadyQueue(job)) {

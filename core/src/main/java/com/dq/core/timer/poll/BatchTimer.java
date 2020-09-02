@@ -25,7 +25,6 @@ public class BatchTimer extends BaseTimer {
         ReadyQueue readyQueue = (ReadyQueue) ApplicationContextHolder.getBeanByType(ReadyQueue.class);
 
         List<String> delayList = new ArrayList<>();
-        boolean flag = true;
         System.out.println(new Date());
         System.out.println(System.currentTimeMillis());
         while (true) {
