@@ -7,7 +7,9 @@ import com.google.gson.Gson;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * * @Author: RyouA
@@ -27,6 +29,15 @@ public class JobPool {
         redisUtil.set(job.getId(), gson.toJson(job));
     }
 
+    public void addJobs(List<Job> jobs) {
+        Map<String, String> map = new HashMap<>();
+        for (Job job : jobs) {
+            job.setId(job.getTopic() + "No." + snowFlake.nextId());
+            map.put(job.getId(), gson.toJson(job));
+        }
+        redisUtil.multiSet(map);
+    }
+
     public boolean deleteJob(String id) {
         redisUtil.delete(id);
         return true;
@@ -37,23 +48,11 @@ public class JobPool {
         return true;
     }
 
-    public Job getJob(String id) {
-        String job = redisUtil.get(id);
-        return gson.fromJson(job, Job.class);
+    public String getJob(String id) {
+        return redisUtil.get(id);
     }
 
     public List<String> getJobs(List<String> idList) {
         return redisUtil.multiGet(idList);
     }
-
-    public String getJobStr(String id) {
-        return redisUtil.get(id);
-    }
-
-    public void deleteAllJobWithTopic(String topic) {
-    }
-
-    public void getTopicJob(String topic) {
-    }
-
 }

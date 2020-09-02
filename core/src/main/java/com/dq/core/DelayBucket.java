@@ -9,12 +9,11 @@ import com.google.gson.Gson;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.DefaultTypedTuple;
 import org.springframework.data.redis.core.ZSetOperations;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 
 /**
@@ -39,17 +38,38 @@ public class DelayBucket {
     public void addJobToBucket(Job job) {
         long absTime = System.currentTimeMillis() + job.getDelay() * 1000;
         job.setAbsTime(absTime);
-        if (!topics.contains(job.getTopic())) {
-            topics.add(job.getTopic());
-        }
         redisUtil.zAdd(DELAY_QUEUE_BUCKET + job.getTopic(), job.getId(), absTime);
         log.info(sm.getString("bucket.addJob"));
     }
 
-    public List<BucketJob> getBucket(String topic) {
+    public void addJobsToBucket(List<Job> jobs) {
+        List<String> topicList = new ArrayList<>();
+        Map<String, Set<ZSetOperations.TypedTuple<String>>> map = new HashMap<>();
+        for (Job job : jobs) {
+            long absTime = System.currentTimeMillis() + job.getDelay() * 1000;
+            job.setAbsTime(absTime);
+            if (map.containsKey(job.getTopic())) {
+                Set<ZSetOperations.TypedTuple<String>> typedTuples = map.get(job.getTopic());
+                ZSetOperations.TypedTuple<String> typedTuple = new DefaultTypedTuple<>(gson.toJson(job), (double) job.getAbsTime());
+                typedTuples.add(typedTuple);
+                map.put(job.getTopic(), typedTuples);
+            } else {
+                Set<ZSetOperations.TypedTuple<String>> typedTuples = new HashSet<>();
+                ZSetOperations.TypedTuple<String> typedTuple = new DefaultTypedTuple<>(gson.toJson(job), (double) job.getAbsTime());
+                typedTuples.add(typedTuple);
+                map.put(job.getTopic(), typedTuples);
+                topicList.add(job.getTopic());
+            }
+        }
+        for (String topic : topicList) {
+            redisUtil.zAdd(DELAY_QUEUE_BUCKET + topic, map.get(topic));
+        }
+    }
+
+    public List<BucketJob> getBucketJobs(String topic) {
         long now = System.currentTimeMillis();
         Set<ZSetOperations.TypedTuple<String>> typedTuples =
-                redisUtil.zRangeWithScores(DELAY_QUEUE_BUCKET + topic, 0, -1);
+                redisUtil.zRangeByScoreWithScores(DELAY_QUEUE_BUCKET + topic, now - 1000, now);
         List<BucketJob> result = new ArrayList<>();
         for (ZSetOperations.TypedTuple typedTuple : typedTuples) {
             BucketJob jobBucket = new BucketJob();

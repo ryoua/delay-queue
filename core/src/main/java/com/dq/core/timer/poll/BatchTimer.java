@@ -30,7 +30,7 @@ public class BatchTimer extends BaseTimer {
         System.out.println(System.currentTimeMillis());
         while (true) {
             long now = System.currentTimeMillis();
-            List<BucketJob> bucketJobList = bucket.getBucket("test");
+            List<BucketJob> bucketJobList = bucket.getBucketJobs("test");
             for (BucketJob job : bucketJobList) {
                 if (job.getAbsTime() <= now) {
                     delayList.add(job.getJobId());
