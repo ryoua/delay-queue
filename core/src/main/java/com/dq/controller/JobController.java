@@ -42,4 +42,10 @@ public class JobController {
         jobPool.deleteJob(id);
         return Result.SUCCESS();
     }
+
+    @DeleteMapping("/jobs")
+    public Result deleteJobs(@RequestBody List<String> jobs) {
+        jobPool.deleteJobs(jobs);
+        return Result.SUCCESS();
+    }
 }

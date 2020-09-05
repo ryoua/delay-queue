@@ -12,7 +12,9 @@ public class CollectionUtil {
         List result = new ArrayList();
         for (Object o : list) {
             if (!StringUtil.isNull(o)) {
-                result.add(o);
+                if (!o.toString().equals("")) {
+                    result.add(o);
+                }
             }
         }
         return result;

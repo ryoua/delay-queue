@@ -6,11 +6,10 @@ import com.dq.utils.CollectionUtil;
 import com.dq.utils.RedisUtil;
 import com.dq.utils.StringUtil;
 import com.google.gson.Gson;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.util.Assert;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -30,17 +29,18 @@ public class ReadyQueue {
 
     public boolean addJobToReadyQueue(BucketJob bucketJob) {
         String jobStr = jobPool.getJob(bucketJob.getJobId());
-        Job job = gson.fromJson(jobStr, Job.class);
 
-        if (StringUtil.isNull(job)) {
+        if (StringUtil.isNull(jobStr) || StringUtils.isBlank(jobStr)) {
             return false;
         }
-        redisUtil.lLeftPush(DELAY_QUEUE_READY_QUEUE, gson.toJson(job));
+
+        redisUtil.lLeftPush(DELAY_QUEUE_READY_QUEUE, jobStr);
         return true;
     }
 
     public boolean addJobsToReadyQueue(List<String> jobs) {
-        redisUtil.lLeftPushAll(DELAY_QUEUE_READY_QUEUE, CollectionUtil.removeNullElement(jobs));
+        List list = CollectionUtil.removeNullElement(jobs);
+        redisUtil.lLeftPushAll(DELAY_QUEUE_READY_QUEUE, list);
         return true;
     }
 }

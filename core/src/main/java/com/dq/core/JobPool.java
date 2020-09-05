@@ -3,6 +3,7 @@ package com.dq.core;
 import com.dq.model.Job;
 import com.dq.utils.RedisUtil;
 import com.dq.utils.SnowFlake;
+import com.dq.utils.StringUtil;
 import com.google.gson.Gson;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -52,5 +53,9 @@ public class JobPool {
 
     public List<String> getJobs(List<String> idList) {
         return redisUtil.multiGet(idList);
+    }
+
+    public boolean hasJob(String id) {
+        return redisUtil.hasKey(id);
     }
 }

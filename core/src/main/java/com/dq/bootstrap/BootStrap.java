@@ -1,8 +1,6 @@
 package com.dq.bootstrap;
 
-import com.dq.core.timer.BaseTimer;
 import com.dq.core.timer.poll.BatchTimer;
-import com.dq.core.timer.poll.Timer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
