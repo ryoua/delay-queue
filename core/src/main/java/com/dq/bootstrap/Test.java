@@ -21,7 +21,7 @@ public class Test {
     public void test() throws Exception {
         Long start = System.currentTimeMillis();
         List<Job> list = new ArrayList<>();
-        for (int i = 0; i < 300000; i++) {
+        for (int i = 0; i < 500000; i++) {
             Job job = new Job();
             job.setId(UUID.randomUUID().toString());
             job.setTopic("test");

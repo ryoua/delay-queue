@@ -17,7 +17,7 @@ import java.util.List;
  * * @Date: 2020/9/1
  **/
 @Component
-public class BatchTimer extends BaseTimer {
+public class BatchTimer extends BaseTimer implements Runnable {
     @Override
     public void scan() {
         DelayBucket bucket = (DelayBucket) ApplicationContextHolder.getBeanByType(DelayBucket.class);
@@ -35,11 +35,11 @@ public class BatchTimer extends BaseTimer {
                     delayList.add(job.getJobId());
                 }
             }
+            bucket.deleteBucketJobs("test");
             List<String> jobs = jobPool.getJobs(delayList);
             readyQueue.addJobsToReadyQueue(jobs);
             jobPool.deleteJobs(delayList);
             System.out.println(new Date());
-            break;
         }
     }
 

@@ -10,6 +10,7 @@ import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -39,8 +40,25 @@ public class ReadyQueue {
     }
 
     public boolean addJobsToReadyQueue(List<String> jobs) {
-        List list = CollectionUtil.removeNullElement(jobs);
-        redisUtil.lLeftPushAll(DELAY_QUEUE_READY_QUEUE, list);
+        int index = 0;
+        int length = jobs.size();
+        List<List<String>> lists = new ArrayList<>();
+        List<String> data = new ArrayList<>();
+
+        for (int i = 0; i < length; i++) {
+            if (index == 10000) {
+                lists.add(data);
+                data.clear();
+                index = 0;
+            } else {
+                data.add(jobs.get(i));
+                index++;
+            }
+        }
+        for (List list : lists) {
+            list = CollectionUtil.removeNullElement(jobs);
+            redisUtil.lLeftPushAll(DELAY_QUEUE_READY_QUEUE, list);
+        }
         return true;
     }
 }

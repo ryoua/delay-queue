@@ -35,6 +35,8 @@ public class DelayBucket {
 
     private static final StringManager sm = StringManager.getManager(DelayBucket.class);
 
+    private static long now = System.currentTimeMillis();
+
     public void addJobToBucket(Job job) {
         long absTime = System.currentTimeMillis() + job.getDelay() * 1000;
         job.setAbsTime(absTime);
@@ -67,9 +69,9 @@ public class DelayBucket {
     }
 
     public List<BucketJob> getBucketJobs(String topic) {
-        long now = System.currentTimeMillis();
+        now = System.currentTimeMillis();
         Set<ZSetOperations.TypedTuple<String>> typedTuples =
-                redisUtil.zRangeByScoreWithScores(DELAY_QUEUE_BUCKET + topic, now - 1000, now);
+                redisUtil.zRangeWithScores(DELAY_QUEUE_BUCKET + topic, now - 10000, now);
         List<BucketJob> result = new ArrayList<>();
         for (ZSetOperations.TypedTuple typedTuple : typedTuples) {
             BucketJob jobBucket = new BucketJob();
@@ -78,5 +80,9 @@ public class DelayBucket {
             result.add(jobBucket);
         }
         return result;
+    }
+
+    public void deleteBucketJobs(String topic) {
+        redisUtil.zRemoveRange(DELAY_QUEUE_BUCKET + topics, now - 10000, now);
     }
 }

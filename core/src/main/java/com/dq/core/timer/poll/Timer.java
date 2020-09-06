@@ -8,17 +8,16 @@ import com.dq.model.BucketJob;
 import com.dq.holder.ApplicationContextHolder;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicInteger;
 
 /**
+ * * 单条命令执行版本, QPS在4000左右
  * * @Author: RyouA
  * * @Date: 2020/8/26
  **/
 @Component
-public class Timer extends BaseTimer {
+public class Timer extends BaseTimer implements Runnable {
     @Override
     public void run() {
         scan();
@@ -30,32 +29,17 @@ public class Timer extends BaseTimer {
         JobPool jobPool = (JobPool) ApplicationContextHolder.getBeanByType(JobPool.class);
         ReadyQueue readyQueue = (ReadyQueue) ApplicationContextHolder.getBeanByType(ReadyQueue.class);
 
-        Integer atomicInteger = 0;
-
         boolean flag = true;
-        System.out.println(new Date());
-        System.out.println(System.currentTimeMillis());
         while (flag) {
             long now = System.currentTimeMillis();
             List<BucketJob> jobList = bucket.getBucketJobs("test");
             for (BucketJob job : jobList) {
                 if (job.getAbsTime() <= now) {
-                    if (readyQueue.addJobToReadyQueue(job)) {
-                        atomicInteger++;
-                        System.out.println("put " + atomicInteger);
-                    }
+                    readyQueue.addJobToReadyQueue(job);
                     jobPool.deleteJob(job.getJobId());
                 }
             }
-            System.out.println("-----------------------------");
-            if (jobList.isEmpty()) {
-                flag = false;
-            }
-            if (atomicInteger == 10000) {
-                flag = false;
-                System.out.println(new Date());
-                break;
-            }
+            bucket.deleteBucketJobs("test");
         }
     }
 }

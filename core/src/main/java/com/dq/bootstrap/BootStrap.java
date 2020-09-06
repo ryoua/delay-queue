@@ -1,6 +1,7 @@
 package com.dq.bootstrap;
 
 import com.dq.core.timer.poll.BatchTimer;
+import com.dq.core.timer.poll.Timer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
@@ -12,14 +13,11 @@ import org.springframework.stereotype.Component;
 @Component
 public class BootStrap implements CommandLineRunner {
     @Autowired
-    BatchTimer batchTimer;
-
-    @Autowired
     Test test;
 
     @Override
     public void run(String... args) throws Exception {
         test.test();
-        batchTimer.scan();
+        new Thread(new BatchTimer()).start();
     }
 }
