@@ -1,6 +1,5 @@
-package com.dq.core;
+package com.dq.core.delayBucket;
 
-import com.dq.holder.ApplicationContextHolder;
 import com.dq.model.BucketJob;
 import com.dq.model.Job;
 import com.dq.utils.RedisUtil;
