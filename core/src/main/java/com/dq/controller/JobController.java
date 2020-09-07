@@ -4,7 +4,6 @@ import com.dq.core.DelayBucket;
 import com.dq.core.JobPool;
 import com.dq.model.Job;
 import com.dq.model.Result;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 

@@ -1,9 +1,9 @@
-package com.dq.core.timer.poll;
+package com.dq.core;
 
 import com.dq.core.DelayBucket;
 import com.dq.core.JobPool;
 import com.dq.core.ReadyQueue;
-import com.dq.core.timer.BaseTimer;
+import com.dq.core.BaseTimer;
 import com.dq.model.BucketJob;
 import com.dq.holder.ApplicationContextHolder;
 import org.springframework.stereotype.Component;
@@ -16,7 +16,7 @@ import java.util.List;
  * * @Date: 2020/8/26
  **/
 @Component
-public class Timer extends BaseTimer implements Runnable {
+public class SingleTimer extends BaseTimer implements Runnable {
     @Override
     public void run() {
         scan();
